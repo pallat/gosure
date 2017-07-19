@@ -39,9 +39,31 @@ func TestItsAbsolutelyErrorShouldEnsureByDoItThreeTimes(t *testing.T) {
 	w := fakeDoError{}
 	ok := Sure(&w, 3, 500*time.Millisecond)
 	if ok {
-		t.Error("it should be ok")
+		t.Error("it should not ok")
 	}
 	if w.times != 3 {
+		t.Error("it should repeat 3 times but got", w.times)
+	}
+}
+
+type fakePartialError struct {
+	times int
+}
+
+func (f *fakePartialError) Do() error {
+	f.times++
+	if f.times == 2 {
+		return nil
+	}
+	return errors.New("fail")
+}
+func TestItsPartialErrorAtFirstTimeAndSuccessInSecondTime(t *testing.T) {
+	w := fakePartialError{}
+	ok := Sure(&w, 3, 500*time.Millisecond)
+	if !ok {
+		t.Error("it should be ok")
+	}
+	if w.times != 2 {
 		t.Error("it should repeat 3 times but got", w.times)
 	}
 }
