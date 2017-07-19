@@ -9,5 +9,8 @@ type Worker interface {
 }
 
 func Sure(w Worker, repeat int, frequency time.Duration) bool {
+	if err := w.Do(); err != nil {
+		return false
+	}
 	return true
 }
