@@ -37,7 +37,7 @@ func TestItsAbsolutelyError(t *testing.T) {
 
 func TestItsAbsolutelyErrorShouldEnsureByDoItThreeTimes(t *testing.T) {
 	w := fakeDoError{}
-	ok := Sure(&w, 3, 500*time.Millisecond)
+	ok := Sure(&w, 1500*time.Millisecond, 500*time.Millisecond)
 	if ok {
 		t.Error("it should not ok")
 	}
@@ -59,7 +59,7 @@ func (f *fakePartialError) Do() error {
 }
 func TestItsPartialErrorAtFirstTimeAndSuccessInSecondTime(t *testing.T) {
 	w := fakePartialError{}
-	ok := Sure(&w, 3, 500*time.Millisecond)
+	ok := Sure(&w, 1500*time.Millisecond, 500*time.Millisecond)
 	if !ok {
 		t.Error("it should be ok")
 	}

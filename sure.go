@@ -8,9 +8,9 @@ type Worker interface {
 	Do() error
 }
 
-func Sure(w Worker, repeat int64, frequency time.Duration) bool {
+func Sure(w Worker, timeout, frequency time.Duration) bool {
 	tick := time.Tick(frequency)
-	timeout := time.After(time.Duration(repeat*frequency.Nanoseconds()) * time.Nanosecond)
+	to := time.After(timeout)
 	if err := w.Do(); err == nil {
 		return true
 	}
@@ -32,7 +32,7 @@ func Sure(w Worker, repeat int64, frequency time.Duration) bool {
 			if err == nil {
 				return true
 			}
-		case <-timeout:
+		case <-to:
 			return false
 		}
 	}
